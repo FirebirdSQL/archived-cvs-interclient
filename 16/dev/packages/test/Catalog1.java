@@ -23,7 +23,7 @@ public static void runGetColumnTest() {
        (interbase.interclient.DatabaseMetaData)
        ((interbase.interclient.Connection)conn).getMetaData();
     System.out.println(" Database read-only? : " + dbmd.isReadOnly() );
-    System.out.println(" SQL Dialect " +  dbmd.getDatabaseSQLDialect() );
+//    System.out.println(" SQL Dialect " +  dbmd.getDatabaseSQLDialect() );
     ResultSet rs = dbmd.getColumns(null, null, "alltypes3", "%");
     ResultSetMetaData rsmd = rs.getMetaData();
     int rsColumnCount = rsmd.getColumnCount();

@@ -1,0 +1,13 @@
+
+Mark O'Donohue 1/9/00
+
+Hi 
+
+I recompiled the java classes with changes recommended by Torsten.  Using
+a simple makefile
+
+all: 
+	javac `find . -name '*.java' -print`
+
+Classpath has to he set to include the j2ee.jar from the j2ee 1.0.  The jar
+file provided is the beta version, and some of the package names have changed.

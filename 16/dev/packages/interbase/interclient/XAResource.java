@@ -250,12 +250,21 @@ public class XAResource implements javax.transaction.xa.XAResource
    *
    * @param the transaction timeout value in seconds.
    *
+   * @return true if transaction timeout value is set successfully; otherwise false.
+   *
    * @throws javax.transaction.xa.XAException An error has occurred. Possible exception values
    * are XAER_RMERR, XAER_RMFAIL, or XAER_INVAL.
    * @since <font color=red>JDBC 2 Standard Extension, proposed for future release, not yet supported</font>
    **/
-  synchronized public void setTransactionTimeout(int seconds) throws javax.transaction.xa.XAException
-  {}
+  //Torsten-start 08-11-2000
+  //old code-start
+  synchronized public boolean setTransactionTimeout(int seconds) throws javax.transaction.xa.XAException {
+    return false; //not yet supported
+  }
+  //synchronized public void setTransactionTimeout(int seconds) throws javax.transaction.xa.XAException
+  //{}
+  //old code-end
+  //Torsten-end 08-11-2000
 
   /**
    * Start work on behalf of a transaction branch specified in xid
@@ -272,5 +281,24 @@ public class XAResource implements javax.transaction.xa.XAResource
    **/
   synchronized public void start (javax.transaction.xa.Xid xid, int flags) throws javax.transaction.xa.XAException
   {}
+
+  //Torsten-start 08-11-2000
+  /**
+   * This method is called to determine if the resource manager instance
+   * represented by the target object is the same as the resouce manager instance
+   * represented by the parameter xares.
+   *
+   * @param xares An XAResource object whose resource manager instance is to be compared
+   * with the resource manager instance of the target object.
+   *
+   * @throws XAException An error has occurred. Possible exceptions
+   * are XAER_RMERR, XAER_RMFAIL.
+   *
+   * @since <font color=red>JDBC 2 Standard Extension, proposed for future release, not yet supported</font>
+   * **/
+  synchronized public boolean isSameRM(javax.transaction.xa.XAResource xares) throws javax.transaction.xa.XAException {
+    return false;
+  }
+  //Torsten-end 08-11-2000
 
 }

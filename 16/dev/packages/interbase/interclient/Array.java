@@ -807,27 +807,49 @@ final public class Array implements java.sql.Array
     for (int i = 0; i < length; i++) {
       Object element = ((Object[])array)[i];
       if (element instanceof java.sql.Date) {
+        //Torsten-start 08-11-2000
+        tmpElem = new IBTimestamp ((java.sql.Date)element);
+        /*
+        //old code-start
         tmpElem = new IBTimestamp (((java.sql.Date)element).getYear (),
                                    ((java.sql.Date)element).getMonth (),
                                    ((java.sql.Date)element).getDate ());
+        //old code-end
+        */
+        //Torsten-end 08-11-2000
       }
       else if (element instanceof java.sql.Timestamp) {
+        //Torsten-start 08-11-2000
+        tmpElem = new IBTimestamp ((java.sql.Timestamp)element);
+        /*
+        //old code-start
         tmpElem = new IBTimestamp (((java.sql.Timestamp)element).getYear (),
                                    ((java.sql.Timestamp)element).getMonth (),
                                    ((java.sql.Timestamp)element).getDate (),
                                    ((java.sql.Timestamp)element).getHours (),
                                    ((java.sql.Timestamp)element).getMinutes (),
                                    ((java.sql.Timestamp)element).getSeconds ());
+        //old code-end
+        */
+        //Torsten-end 08-11-2000
       }
       else if (element instanceof String) {
         try {
           java.sql.Timestamp tmpTimestamp = java.sql.Timestamp.valueOf ((String)element);
+          //Torsten-start 08-11-2000
+          tmpElem = new IBTimestamp (tmpTimestamp);
+          /*
+          //old code-start
           tmpElem = new IBTimestamp (tmpTimestamp.getYear (),
                                      tmpTimestamp.getMonth (),
                                      tmpTimestamp.getDate (),
                                      tmpTimestamp.getHours (),
                                      tmpTimestamp.getMinutes (),
                                      tmpTimestamp.getSeconds ());
+          //old code-end
+          */
+          //Torsten-end 08-11-2000
+
         }
         catch (java.lang.IllegalArgumentException e) {
           throw new ParameterConversionException (ErrorKey.parameterConversion__array_element_instance_conversion_0__,
@@ -1033,6 +1055,11 @@ final public class Array implements java.sql.Array
           int timestampId[] = recvMsg.readTimestampId ();
           IBTimestamp ibTimestamp = new IBTimestamp (IBTimestamp.DATETIME,
                                                      timestampId);
+	        //Torsten-start 08-11-2000
+          ((java.sql.Timestamp[])array)[i] = new java.sql.Timestamp(ibTimestamp.getTimeInMillis());
+          ((java.sql.Timestamp[])array)[i].setNanos(ibTimestamp.getNanos());
+          /*
+          //old code-start
 	        ((java.sql.Timestamp[])array)[i] = new java.sql.Timestamp (
                                              ibTimestamp.getYear (),
                                              ibTimestamp.getMonth (),
@@ -1041,6 +1068,9 @@ final public class Array implements java.sql.Array
                                              ibTimestamp.getMinutes (),
                                              ibTimestamp.getSeconds (),
                                              ibTimestamp.getNanos ());
+          //old code-end
+          */
+          //Torsten-end 08-11-2000
         }
         return;
       default:

@@ -187,5 +187,6 @@ final class Globals
   static void trace (Object object)
   {
     // !!! remove this, only trace on a datasource
+    System.out.println(object);
   }
 }

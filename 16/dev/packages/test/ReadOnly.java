@@ -18,7 +18,7 @@ static public void RunReadOnlyTest() {
        (interbase.interclient.DatabaseMetaData)
        ((interbase.interclient.Connection)conn).getMetaData();
     System.out.println(" Database read-only? : " + dbmd.isReadOnly() );
-    System.out.println(" SQL Dialect " +  dbmd.getDatabaseSQLDialect() );
+//    System.out.println(" SQL Dialect " +  dbmd.getDatabaseSQLDialect() );
 //    ResultSet rs = dbmd.getTypeInfo();
     PreparedStatement pstmt = conn.prepareStatement(
          "Select * from RDB$RELATIONS where RDB$RELATION_NAME like 'RDB$%'");

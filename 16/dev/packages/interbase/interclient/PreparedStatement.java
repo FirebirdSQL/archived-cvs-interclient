@@ -951,7 +951,12 @@ public class PreparedStatement extends Statement implements java.sql.PreparedSta
     case IBTypes.BLOB__:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__set_date_on_binary_blob__);
     case IBTypes.DATE__:
-      inputs_[parameterIndex-1] = new IBTimestamp (x.getYear (), x.getMonth (), x.getDate ());
+      //Torsten-start 08-11-2000
+      inputs_[parameterIndex-1] = new IBTimestamp (x);
+      //old code-start
+      //inputs_[parameterIndex-1] = new IBTimestamp (x.getYear (), x.getMonth (), x.getDate ());
+      //old code-end
+      //Torsten-end 08-11-2000
       break;
     default:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__);
@@ -984,8 +989,13 @@ public class PreparedStatement extends Statement implements java.sql.PreparedSta
     case IBTypes.BLOB__:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__set_date_on_binary_blob__);
     case IBTypes.DATE__:
+      //Torsten-start 08-11-2000
+      inputs_[parameterIndex-1] = new IBTimestamp (x);
+      //old code-start
       // sets dummy year 1900, dummy month jan, dummy date the first
-      inputs_[parameterIndex-1] = new IBTimestamp (0, 0, 1, x.getHours (), x.getMinutes (), x.getSeconds ());
+      //inputs_[parameterIndex-1] = new IBTimestamp (0, 0, 1, x.getHours (), x.getMinutes (), x.getSeconds ());
+      //old code-end
+      //Torsten-end 08-11-2000
       break;
     default:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__);
@@ -1019,8 +1029,13 @@ public class PreparedStatement extends Statement implements java.sql.PreparedSta
     case IBTypes.BLOB__:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__set_date_on_binary_blob__);
     case IBTypes.DATE__:
-      inputs_[parameterIndex-1] = new IBTimestamp (x.getYear (), x.getMonth (), x.getDate (),
-						   x.getHours (), x.getMinutes (), x.getSeconds());
+      //Torsten-start 08-11-2000
+      inputs_[parameterIndex-1] = new IBTimestamp (x);
+      //old code-start
+      //inputs_[parameterIndex-1] = new IBTimestamp (x.getYear (), x.getMonth (), x.getDate (),
+			//			   x.getHours (), x.getMinutes (), x.getSeconds());
+      //old code-end
+      //Torsten-end 08-11-2000
       break;
     default:
       throw new ParameterConversionException (ErrorKey.parameterConversion__type_conversion__);
@@ -1048,8 +1063,13 @@ public class PreparedStatement extends Statement implements java.sql.PreparedSta
   String getStringFromAsciiInputStream (java.io.InputStream in, int length) throws java.sql.SQLException
   {
     byte[] buf = getBytesFromInputStream (in, length);
-    return new String (buf,  // ascii byte array
-		       0);   // hibyte - the top 8 bits of each 16 bit unicode character
+    //Torsten-start 08-11-2000
+    return new String(buf);
+    //old code-start
+    //return new String (buf,  // ascii byte array
+		//       0);   // hibyte - the top 8 bits of each 16 bit unicode character
+    //old code-end
+    //Torsten-end 08-11-2000
   }
 
   // Construct a string from the user supplied unicode input stream in setUnicodeStream()

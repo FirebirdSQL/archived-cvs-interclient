@@ -312,6 +312,9 @@ final public class ResultSet implements java.sql.ResultSet,
     if (recvMsg_ == null) 
       throw new InvalidOperationException (ErrorKey.invalidOperation__read_at_end_of_cursor__);
 
+    if ( (statement_.maxRows_ > 0) && (rowsRead_ >= statement_.maxRows_) ) 
+        return false; 
+
     try {
       // !!! this currently only accounts for no message streaming
       restoreRowPosition ();  // reset position to beginning of next row
@@ -323,9 +326,9 @@ final public class ResultSet implements java.sql.ResultSet,
 	    openOnServer_ = false; // auto-close result set after last row is read
 	    return false;
 	  }
-	  if ((statement_.maxRows_ > 0) && (rowsRead_ >= statement_.maxRows_)) {
-	    return false;
-	  }
+//	  if ((statement_.maxRows_ > 0) && (rowsRead_ >= statement_.maxRows_)) {
+//	    return false;
+//	  }
 	}
 	finally {
 	  jdbcNet_.destroyRecvMessage (recvMsg_);
@@ -1063,6 +1066,17 @@ final public class ResultSet implements java.sql.ResultSet,
     case IBTypes.DATE__:
       // !!! any way to get this in a long rather than int[]
       int timestampId[] = getRowData_timestampId (column-1);
+
+      //Torsten-start 08-11-2000
+      IBTimestamp ibTimestamp = new IBTimestamp (IBTimestamp.DATE, timestampId);
+      if (adaptToSingleInstanceTime_) {
+        adaptableDate_.setTime(ibTimestamp.getTimeInMillis());
+        return adaptableDate_;
+      } else {
+        return new java.sql.Date(ibTimestamp.getTimeInMillis());
+      }
+      //old code-start
+      /*
       if (adaptToSingleInstanceTime_) {
         adaptableIBTimestamp_.setTimestampId (IBTimestamp.DATE, timestampId);
         adaptableDate_.setYear (adaptableIBTimestamp_.getYear ());
@@ -1078,6 +1092,9 @@ final public class ResultSet implements java.sql.ResultSet,
                                    ibTimestamp.getMonth (),
                                    ibTimestamp.getDate ()));
       }
+      */
+      //old code-end
+      //Torsten-end 08-11-2000
 
     case IBTypes.CHAR__:
     case IBTypes.VARCHAR__:
@@ -1115,6 +1132,18 @@ final public class ResultSet implements java.sql.ResultSet,
     switch (resultTypes_[column-1]) {
     case IBTypes.DATE__:
       int timestampId[] = getRowData_timestampId (column-1);
+
+      //Torsten-start 08-11-2000
+      if (adaptToSingleInstanceTime_) {
+        adaptableIBTimestamp_.setTimestampId (IBTimestamp.TIME, timestampId);
+        adaptableTime_.setTime(adaptableIBTimestamp_.getTimeInMillis());
+        return adaptableTime_;
+      } else {
+        IBTimestamp ibTimestamp = new IBTimestamp (IBTimestamp.TIME, timestampId);
+        return new java.sql.Time(ibTimestamp.getTimeInMillis());
+      }
+      //old code-start
+      /*
       if (adaptToSingleInstanceTime_) {
         adaptableIBTimestamp_.setTimestampId (IBTimestamp.TIME, timestampId);
         adaptableTime_.setHours (adaptableIBTimestamp_.getHours ());
@@ -1128,7 +1157,9 @@ final public class ResultSet implements java.sql.ResultSet,
 			  ibTimestamp.getMinutes (),
 			  ibTimestamp.getSeconds ()));
       }
-
+      */
+      //old code-end
+      //Torsten-end 08-11-2000
     case IBTypes.CHAR__:
     case IBTypes.VARCHAR__:
     case IBTypes.CLOB__:
@@ -1165,6 +1196,20 @@ final public class ResultSet implements java.sql.ResultSet,
     switch (resultTypes_[column-1]) {
     case IBTypes.DATE__:
       int timestampId[] = getRowData_timestampId (column-1);
+      //Torsten-start 08-11-2000
+      if (adaptToSingleInstanceTime_) {
+        adaptableIBTimestamp_.setTimestampId (IBTimestamp.DATETIME, timestampId);
+        adaptableTimestamp_.setTime(adaptableIBTimestamp_.getTimeInMillis());
+        adaptableTimestamp_.setNanos(adaptableIBTimestamp_.getNanos());
+        return adaptableTimestamp_;
+      } else {
+        IBTimestamp ibTimestamp = new IBTimestamp (IBTimestamp.DATETIME,timestampId);
+        java.sql.Timestamp result = new java.sql.Timestamp(ibTimestamp.getTimeInMillis());
+        result.setNanos(ibTimestamp.getNanos());
+        return result;
+      }
+      //old code-start
+      /*
       if (adaptToSingleInstanceTime_) {
         adaptableIBTimestamp_.setTimestampId (IBTimestamp.DATETIME, timestampId);
         adaptableTimestamp_.setYear (adaptableIBTimestamp_.getYear ());
@@ -1187,6 +1232,9 @@ final public class ResultSet implements java.sql.ResultSet,
 			       ibTimestamp.getSeconds (),
 			       ibTimestamp.getNanos ()));
       }
+      */
+      //old code-end
+      //Torsten-end 08-11-2000
 
     case IBTypes.CHAR__:
     case IBTypes.VARCHAR__:
@@ -1809,7 +1857,13 @@ final public class ResultSet implements java.sql.ResultSet,
 
     // Ok, we'll have to search the metadata
     for (int col = 0; col < resultCols_; col++) {
-      if (resultColumnNames_[col].equalsIgnoreCase (columnName)) {
+      //Torsten-start 08-11-2000
+      //old code-start
+      if ( resultColumnNames_[col].equalsIgnoreCase(columnName) ||
+           resultColumnLabels_[col].equalsIgnoreCase(columnName)) {
+      //if (resultColumnNames_[col].equalsIgnoreCase (columnName)) {
+      //old code-end
+      //Torsten-end 08-11-2000
 	// Found it, add it to the cache
 	columnNameToIndexCache_.put (columnName, new Integer (col+1));
 	return col+1;

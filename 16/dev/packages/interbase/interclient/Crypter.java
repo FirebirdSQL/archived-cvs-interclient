@@ -21,6 +21,9 @@ package interbase.interclient;
 /**
  * @author Ravi Kumar
  **/
+//Torsten-start 08-11-2000
+//public //make the class public if you want to use the unit test main[]...
+//Torsten-end 08-11-2000
 final class Crypter 
 {
   private byte[] byteSalt_;
@@ -59,8 +62,13 @@ final class Crypter
 
   byte[] stringCrypt (String value)
   {
-    byte[] b = new byte [value.length()];
-    value.getBytes (0, value.length(), b, 0);
+    //Torsten-start 08-11-2000
+    byte[] b = value.getBytes();
+    //old code-start
+    //byte[] b = new byte [value.length()];
+    //value.getBytes (0, value.length(), b, 0);
+    //old code-end
+    //Torsten-end 08-11-2000
     for (int i = 0; i< b.length; i++) {
       b[i] = (byte) (b[i] ^ byteSalt_[i%9]);
     }
@@ -72,7 +80,13 @@ final class Crypter
     for (int i = 0; i< b.length; i++) {
       b[i] = (byte) (b[i] ^ byteSalt_[i%9]);
     }
-    return new String (b, 0);
+    //Torsten-start 08-11-2000
+    return new String (b);
+    //old code-start
+    //return new String (b, 0);
+    //old code-end
+    //Torsten-end 08-11-2000
+
   }
 
   private byte byteCrypt (byte value)
@@ -89,5 +103,16 @@ final class Crypter
   {
     return (int) (value ^ intSalt_[4]);
   }
+
+  //Torsten-start 08-11-2000
+  public static void main(String[] args) {
+    javax.swing.JFrame f = new javax.swing.JFrame();
+    String clear = "Jetzt Test this word";
+    Crypter c = new Crypter(9999);
+    byte[] b = c.stringCrypt(clear);
+    System.out.println("encrypted: " + new String(b));
+    System.out.println("decrypted: " + c.stringDecrypt(b));
+  }
+  //Torsten-end 08-11-2000
 
 }

@@ -1,4 +1,37 @@
 
+The firebird/make.sh script will build interserver and will compile the 
+java sources.
+
+You currently need j2ee.jar to compile the java sources.  Set J2EE_HOME 
+before running firebird/make.sh in this directory.
+
+The firebird/makeDeliverables.sh script will create the file InterClient.tar
+in the product directory.
+
+#
+# make "build" version on linux
+#
+IC_PLATFORM=linux; export IC_PLATFORM
+IC_BUILD_DIR=`pwd`; export IC_BUILD_DIR
+firebird/make.sh -build
+firebird/makeDeliverables.sh -build
+
+To install InterClient/interserver:
+
+ 1) Extract InterClient.tar to a temp[orary] directory, 
+
+ 2) cd to it  
+ 
+   for example, 
+
+     cd [temp]/interclient_install_temp_dir
+
+ 3) execute "install.sh" to install InterClient.
+
+Interserver may be installed optionally.
+
+Tom Coleman  20-Dec-00
+
 Mark O'Donohue 1/9/00
 
 Hi 
@@ -9,5 +42,6 @@ a simple makefile
 all: 
 	javac `find . -name '*.java' -print`
 
-Classpath has to he set to include the j2ee.jar from the j2ee 1.0.  The jar
+Classpath has to be set to include the j2ee.jar from the j2ee 1.0.  The jar
 file provided is the beta version, and some of the package names have changed.
+
